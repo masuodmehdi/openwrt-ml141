@@ -1,0 +1,37 @@
+name: Extract Firmware with Binwalk
+
+on:
+  workflow_dispatch: # اجرای دستی از پنل Actions
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Binwalk and Extraction Tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y binwalk u-boot-tools squashfs-tools p7zip-full mtd-utils
+
+      - name: Run Binwalk Analysis & Extract
+        run: |
+          # نام فایل دامپ خود را در صورت تفاوت در خط زیر تغییر دهید
+          FIRMWARE_FILE="firmware.bin"
+          
+          echo "=== BINWALK SCAN ===" > scan_report.txt
+          binwalk $FIRMWARE_FILE >> scan_report.txt
+          
+          echo "=== EXTRACTING... ==="
+          binwalk -Me $FIRMWARE_FILE || true
+          
+          # پیدا کردن پوشه استخراج شده و زیپ کردن آن
+          zip -r extracted_firmware.zip _${FIRMWARE_FILE}.extracted scan_report.txt
+
+      - name: Upload Extracted Files as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: extracted-firmware
+          path: extracted_firmware.zip
