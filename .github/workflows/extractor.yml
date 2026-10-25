@@ -16,7 +16,7 @@ jobs:
       - name: Download Firmware
         run: |
           # لینک دانلود مستقیم خود را دقیقاً به جای متن داخل پرانتز قرار دهید
-          curl -L -o firmware.bin "[https://my.uploadkon.ir/d/No9R3ctnouTbKl8IE7kzIsimiVDIip/Nzg0NTF8cGFkZA.zip]"
+          curl -L -o firmware.bin "https://my.uploadkon.ir/d/No9R3ctnouTbKl8IE7kzIsimiVDIip/Nzg0NTF8cGFkZA.zip"
 
       - name: Run Binwalk Analysis & Extract
         run: |
